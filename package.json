@@ -1,0 +1,30 @@
+{
+  "name": "nccu-os-final-project",
+  "version": "1.0.0",
+  "description": "Operating System Final Project =======",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Honesty1997/OS-2018-Fall-Final-Project.git"
+  },
+  "author": "",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/Honesty1997/OS-2018-Fall-Final-Project/issues"
+  },
+  "homepage": "https://github.com/Honesty1997/OS-2018-Fall-Final-Project#readme",
+  "devDependencies": {
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "parcel": "^1.10.3",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  }
+}
