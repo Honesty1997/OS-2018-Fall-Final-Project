@@ -22,7 +22,9 @@
     "eslint-plugin-import": "^2.14.0"
   },
   "dependencies": {
+    "config": "^2.0.1",
     "express": "^4.16.4",
+    "nodemon": "^1.18.4",
     "parcel": "^1.10.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
