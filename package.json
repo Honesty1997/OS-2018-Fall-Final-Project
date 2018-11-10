@@ -4,7 +4,10 @@
   "description": "Operating System Final Project =======",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --outDir build src/index.ts",
+    "watch": "tsc --outDir build src/index.ts && nodemon build/index.js",
+    "start": "nodemon "
   },
   "repository": {
     "type": "git",
@@ -22,11 +25,13 @@
     "eslint-plugin-import": "^2.14.0"
   },
   "dependencies": {
+    "@types/node": "^10.12.2",
     "config": "^2.0.1",
     "express": "^4.16.4",
     "nodemon": "^1.18.4",
     "parcel": "^1.10.3",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "typescript": "^3.1.3"
   }
 }
