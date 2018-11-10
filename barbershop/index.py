@@ -1,28 +1,29 @@
 from threading import Semaphore, BoundedSemaphore
 from time import sleep
 from random import choice
+from queue import Queue
 
-from conf import customer_list, baber_list
-from Baber import Baber as B
-from Customer import Customer as C, CustomerQueue
+from conf import customer_list, barber_list
+from Barber import Barber as B
+from Customer import Customer as C
 
 BABER_COUNT = 5
 SEAT_COUNT = 10
 
-baber_semaphore = BoundedSemaphore(BABER_COUNT)
+barber_semaphore = BoundedSemaphore(BABER_COUNT)
 customer_semaphore = Semaphore(0)
 seat_semaphore = BoundedSemaphore(SEAT_COUNT)
 
-customer_queue = CustomerQueue()
+customer_queue = Queue(SEAT_COUNT)
 
-Baber = B(baber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
-Customer = C(baber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
+Barber = B(barber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
+Customer = C(barber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
 
 def main():
-    # Create some babers waiting for customers.
-    for name in baber_list:
-        baber = Baber.create_baber_thread(name)
-        baber.start()
+    # Create some barbers waiting for customers.
+    for name in barber_list:
+        barber = Barber.create_barber_thread(name)
+        barber.start()
     
     # Keep sending customer at a random Interval.
     while True:
@@ -33,5 +34,4 @@ def main():
         customer.start()
 
 if __name__ == '__main__':
-
     main()

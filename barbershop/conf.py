@@ -1,4 +1,4 @@
-baber_list = ['Ryan', 'Pearl', 'Kevin', 'Robin']
+barber_list = ['Ryan', 'Pearl', 'Kevin', 'Robin']
 customer_list = [
 'Rickie Mcvea',  
 'Rikki Millett',
