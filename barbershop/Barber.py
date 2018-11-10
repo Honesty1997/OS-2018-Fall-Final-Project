@@ -17,12 +17,12 @@ class Barber:
                 self.customer_semaphore.acquire()
                 self.seat_semaphore.release()
                 customer_name = self.customer_queue.get()
-                print('Barber {} is serving Customer {}.'.format(name, customer_name))
+                print('Barber {} is serving {}.'.format(name, customer_name))
                 '''
                 TODO: DO something with customer
                 '''
                 sleep(5)
-                print('Customer {} has been served.'.format(customer_name))
+                print('{} has been served.'.format(customer_name))
                 self.barber_semaphore.release()
         return barber_func
 

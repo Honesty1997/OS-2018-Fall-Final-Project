@@ -14,7 +14,8 @@ class Customer:
             can_seat = self.seat_semaphore.acquire(blocking=False)
             if not can_seat:
             # Exit the thread because the seat is full.
-                print('Customer {} leaves because of full seats.'.format(name))
+                print('{} leaves because of full seats. '.format(name))
+
             else:
             # Signal barber that a customer has been added into waiting queue.
                 self.customer_semaphore.release()

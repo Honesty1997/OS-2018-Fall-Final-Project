@@ -3,12 +3,12 @@ from time import sleep
 from random import choice
 from queue import Queue
 
-from conf import customer_list, barber_list
+from conf import barber_list
 from Barber import Barber as B
 from Customer import Customer as C
 
 BABER_COUNT = 5
-SEAT_COUNT = 10
+SEAT_COUNT = 5
 
 barber_semaphore = BoundedSemaphore(BABER_COUNT)
 customer_semaphore = Semaphore(0)
@@ -24,12 +24,16 @@ def main():
     for name in barber_list:
         barber = Barber.create_barber_thread(name)
         barber.start()
-    
     # Keep sending customer at a random Interval.
+    i=0
     while True:
         # FIXME The time is set to 2 seconds for now. Should change to some random interval.
+        if i<100:
+            i+=1
+        else:
+            i=1
         sleep(1)
-        customer_name = choice(customer_list)
+        customer_name = "Customer "+str(i)
         customer = Customer.create_customer_thread(customer_name)
         customer.start()
 
