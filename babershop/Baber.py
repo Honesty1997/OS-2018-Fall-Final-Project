@@ -1,4 +1,5 @@
 from threading import Thread
+from time import sleep
 class Baber:
     '''The class represents a higher level baber thread constructor.
     '''
@@ -19,7 +20,9 @@ class Baber:
                 '''
                 TODO: DO something with customer
                 '''
-                self.baber_semaphore.relase()
+                sleep(5)
+                print('Customer {} has been served.'.format(customer_name))
+                self.baber_semaphore.release()
         return baber_func
 
     def create_baber_thread(self, name):

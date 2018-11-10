@@ -1,7 +1,7 @@
 from threading import Thread, Lock
 
 class Customer:
-    def __init__(self, customer_semaphore, baber_semaphore, seat_semaphore, customer_queue):
+    def __init__(self, baber_semaphore, customer_semaphore, seat_semaphore, customer_queue):
         self.customer_semaphore = customer_semaphore
         self.baber_semaphore = baber_semaphore
         self.seat_semaphore = seat_semaphore
@@ -11,10 +11,9 @@ class Customer:
         def customer_func():
             print('{} has entered the babershop.'.format(name))
             # Do not block thread activity.
-            self.seat_semaphore.acquire(block=False)
-            if self.seat_semaphore._Semaphore__value < 0:
+            can_seat = self.seat_semaphore.acquire(blocking=False)
+            if not can_seat:
             # Exit the thread because the seat is full.
-                self.seat_semaphore.release()
                 print('Customer {} leaves because of full seats.'.format(name))
             else:
             # Signal baber that a customer has been added into waiting queue.
@@ -55,6 +54,7 @@ class CustomerQueue:
         TODO: Dequeue the customer.
         '''
         self.lock.release()
+        return 'Jack'
 
     def enqueue(self, customer):
         self.lock.acquire()

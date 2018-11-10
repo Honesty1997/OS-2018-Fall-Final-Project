@@ -1,0 +1,23 @@
+baber_list = ['Ryan', 'Pearl', 'Kevin', 'Robin']
+customer_list = [
+'Rickie Mcvea',  
+'Rikki Millett',
+'Carri Houchin',  
+'Dale Wight',  
+'Gussie Grenier',  
+'Farah Gilkey',  
+'Reginald Adamczyk',  
+'Simone Maliszewski',  
+'Myles Schriver',  
+'Paulette Benavente',  
+'Migdalia Conroy',  
+'Irene Flower',  
+'Leesa Swiney',  
+'Elnora Lanham',  
+'Doris Lovick',  
+'Katelin Ponder',  
+'Kathline Pascarella',  
+'Yvone Bergan',  
+'Zula Zellner',
+'Maribeth Gobel' , 
+]
