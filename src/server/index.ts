@@ -1,12 +1,12 @@
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import http from 'http';
 
 import app from './app';
 import io from 'socket.io';
+import config from 'config';
 
-const config = require('config');
-const port = config.get('server.port');
-const host = config.get('server.host');
+const port: number = config.get('server.port');
+const host: string = config.get('server.host');
 const server = http.createServer(app);
 const ioOptions = {
   serveClient: false,
@@ -19,7 +19,7 @@ server.listen({
   port,
   host,
 }, () => {
-  console.log(`Server is listening on port ${host}://${port}`)
+  console.log(`Server is listening on ${host}://${port}`)
   barbershop = spawn('python3', ['main.py']);
   barbershop.stdout.on('data', (chunk) => {
     const data = chunk.toString();

@@ -1,11 +1,10 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
 
 const app = express();
 
 app.use('/static', express.static('build/client'));
 
-app.get('/', (req , res) => {
+app.get('/', (req, res) => {
   res.sendFile('templates/index.html', { root: './' });
 });
 

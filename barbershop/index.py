@@ -38,6 +38,3 @@ def main():
             customer.start()
         except KeyboardInterrupt:
             exit()
-
-if __name__ == '__main__':
-    main()
