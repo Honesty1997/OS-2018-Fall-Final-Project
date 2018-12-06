@@ -1,5 +1,4 @@
-import threading
-from threading import Semaphore, BoundedSemaphore
+from threading import Thread, Semaphore, BoundedSemaphore
 from time import sleep
 from random import choice
 import sys
@@ -21,20 +20,25 @@ customer_queue = Queue(SEAT_COUNT)
 Barber = B(barber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
 Customer = C(barber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
 
+def dispatch_customer():
+    # Keep sending customer at a random Interval.
+    i = 0
+    while True:
+        # FIXME The time is set to 2 seconds for now. Should change to some random interval.
+        i = (i + 1) % 100
+        sleep(1)
+        customer_name = 'Customer ' + str(i)
+        customer = Customer.create_thread(customer_name)
+        customer.start()
+
 def main():
     # Create some barbers waiting for customers.
     for name in barber_list:
         barber = Barber.create_thread(name)
         barber.start()
-    # Keep sending customer at a random Interval.
-    i = 0
+    
+    Thread(target=dispatch_customer).start()
+
     while True:
-        # FIXME The time is set to 2 seconds for now. Should change to some random interval.
-        try:
-            i = (i + 1) % 100
-            sleep(1)
-            customer_name = 'Customer ' + str(i)
-            customer = Customer.create_thread(customer_name)
-            customer.start()
-        except KeyboardInterrupt:
-            exit()
+        line = sys.stdin.readline()
+        print(line, flus=True)

@@ -37,12 +37,22 @@ mv OS-2018-Fall-Final-Project <your-desired-name>
 npm install
 pip install -r requirements.txt
 ```
-6. Start the server or directly run the python file.
-```
-// With this command, it will start a node server and spawn a python process from main.py.
-// You should see some log.
-node index.js
 
-// With this command, just execute the python file only.
+## Start server
+1. If you just want to debug python file. Use
+```
 python3 main.py
+```
+2. Watch front-end and back-end file.
+```
+npm run watch
+```
+3. Start dev server
+```
+npm run dev-start
+```
+4. Build the project and run in production mode.
+```
+npm run build
+npm start
 ```
