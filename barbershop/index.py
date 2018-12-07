@@ -44,3 +44,6 @@ def main():
     
     Thread(target=dispatch_customer).start()
     Thread(target=message_queue.listen_on_queue()).start()
+    while True:
+        message = sys.stdin.readline()
+        print(message, flush=True)

@@ -11,9 +11,9 @@ class Customer(ThreadCreator):
                 self.send('{} left because of no available seats. '.format(
                     name))
             else:
-            # Signal barber that a customer has been added into waiting queue.
-                self.customer_semaphore.release()
+                # Signal barber that a customer has been added into waiting queue.
                 self.customer_queue.put(name)
+                self.customer_semaphore.release()
                 self.barber_semaphore.acquire()
                 '''
                 TODO: Wait for cuting hair.

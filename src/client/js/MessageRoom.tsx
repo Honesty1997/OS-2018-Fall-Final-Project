@@ -4,9 +4,22 @@ import {
 	Component
 } from 'react';
 
+const socket: SocketIOClient.Socket = io({
+	path: '/channel',
+});
+
 interface MessageRoomState {
 	messages: Array <string> ;
-}
+	socket: SocketIOClient.Socket;
+};
+
+const outerBoxStyle = {
+	display: 'flex',
+};
+
+const innerStyle = {
+	flex: 1,
+};
 
 export default class MessageRoom extends Component {
 	public state: MessageRoomState;
@@ -14,11 +27,12 @@ export default class MessageRoom extends Component {
 		super(props);
 		this.state = {
 			messages: [],
+			socket,
 		}
 	}
 
-	setMessage(message: string) {
-		if (this.state.messages.length == 50) {
+	public setMessage(message: string) {
+		if (this.state.messages.length == 40) {
 			this.setState({
 				messages: [message]
 			});
@@ -29,22 +43,33 @@ export default class MessageRoom extends Component {
 		}
 	}
 
-	componentDidMount() {
-		const socket = io({
-			path: '/channel',
-		});
-
+	public componentDidMount() {
 		socket.on('message', (data: string) => {
 			this.setMessage(data);
 		});
+
+		this.setState({ socket: socket });
+	}
+
+	private onClick(event: Event) {
+		this.state.socket.emit('client', 'Front end message.');
 	}
 
 	render() {
 		const messages = this.state.messages.map(message => <li>{ message }</li>);
 			return (
-				<ul>
-					{ messages }
-				</ul>
+				<div style={outerBoxStyle}>
+					<section style={innerStyle}>
+						<ul>
+							{messages}
+						</ul>
+					</section>
+					<section style={innerStyle}>
+						<button onClick={this.onClick.bind(this)}>
+							Send a message
+					</button>
+					</section>
+				</div>
 			);
 	}
 }
