@@ -4,6 +4,7 @@ from random import choice
 import sys
 from queue import Queue
 
+from .message import MessageQueue
 from .conf import barber_list
 from .Barber import Barber as B
 from .Customer import Customer as C
@@ -16,9 +17,13 @@ customer_semaphore = Semaphore(0)
 seat_semaphore = BoundedSemaphore(SEAT_COUNT)
 
 customer_queue = Queue(SEAT_COUNT)
+message_queue = MessageQueue()
 
-Barber = B(barber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
-Customer = C(barber_semaphore, customer_semaphore, seat_semaphore, customer_queue)
+Barber = B(barber_semaphore, customer_semaphore,
+           seat_semaphore, customer_queue, message_queue.get_queue())
+Customer = C(barber_semaphore, customer_semaphore,
+             seat_semaphore, customer_queue, message_queue.get_queue())
+
 
 def dispatch_customer():
     # Keep sending customer at a random Interval.
@@ -38,7 +43,4 @@ def main():
         barber.start()
     
     Thread(target=dispatch_customer).start()
-
-    while True:
-        line = sys.stdin.readline()
-        print(line, flus=True)
+    Thread(target=message_queue.listen_on_queue()).start()

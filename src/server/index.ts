@@ -32,8 +32,11 @@ server.listen({
   console.log(`Starting development server at ${host}:${port}`);
   barbershop = spawn('python3', ['main.py']);
   barbershop.stdout.on('data', (chunk) => {
-    const data = chunk.toString();
-    ioServer.sockets.emit('message', data);
+    const data: Array<string> = chunk.toString().split('\n');
+    const splitData = data.slice(0, data.length - 1);
+    splitData.forEach(message => {
+      ioServer.sockets.emit('message', message);
+    });
   });
   // writeToBarbershopProcess(barbershop);
   barbershop.on('close', (code) => {

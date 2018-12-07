@@ -8,15 +8,18 @@ class Barber(ThreadCreator):
     def initialize(self, name):
         def barber_func():
             while True:
-                print('Barber {} waits for new customers.'.format(name), flush=True)
+                self.send('Barber {} waits for new customers.'.format(
+                    name))
                 self.customer_semaphore.acquire()
                 self.seat_semaphore.release()
                 customer_name = self.customer_queue.get()
-                print('Barber {} is serving {}.'.format(name, customer_name), flush=True)
+                self.send('Barber {} is serving {}.'.format(
+                    name, customer_name))
                 '''
                     TODO: Do something with customer
                 '''
                 sleep(20)
-                print('{} has been served.'.format(customer_name), flush=True)
+                self.send('{} has been served.'.format(
+                    customer_name))
                 self.barber_semaphore.release()
         return barber_func

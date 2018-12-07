@@ -3,12 +3,13 @@ from .modules import ThreadCreator
 class Customer(ThreadCreator):
     def initialize(self, name):
         def customer_func():
-            print('{} has entered the barbershop.'.format(name), flush=True)
+            self.send('{} has entered the barbershop.'.format(name))
             # Do not block thread activity.
             can_seat = self.seat_semaphore.acquire(blocking=False)
             if not can_seat:
             # Exit the thread because the seat is full.
-                print('{} left because of no available seats. '.format(name), flush=True)
+                self.send('{} left because of no available seats. '.format(
+                    name))
             else:
             # Signal barber that a customer has been added into waiting queue.
                 self.customer_semaphore.release()
