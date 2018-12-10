@@ -22,7 +22,12 @@ server.listen({
   host,
 }, () => {
   console.log(`Starting development server at ${host}:${port}`);
-  barbershop = spawn('python3', ['main.py']);
+  try {
+    barbershop = spawn('python3', ['main.py']);
+  } catch (error) {
+    console.log('python3 not found, using python')
+    barbershop = spawn('python', ['main.py']);
+  }
   barbershop.stdout.on('data', (chunk) => {
     const data: Array<string> = chunk.toString().split('\n');
     // The incoming string usaully split by '\n'. 
