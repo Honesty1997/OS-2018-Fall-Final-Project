@@ -25,6 +25,7 @@ server.listen({
   barbershop = spawn('python3', ['main.py']);
   barbershop.stdout.on('data', (chunk) => {
     const data: Array<string> = chunk.toString().split('\n');
+    // The incoming string usaully split by '\n'. 
     const splitData = data.filter(ele => ele !== '');
     splitData.forEach(message => {
       ioServer.sockets.emit('message', message);
