@@ -27,23 +27,32 @@ Customer = C(barber_semaphore, customer_semaphore,
 
 
 def dispatch_customer():
-    # Keep sending customer at a random Interval.
-    i = 0
-    while True:
-        i += 1
-        sleep(get_next_time(CUSTOMER_RATE))
-        customer_name = 'Customer ' + str(i)
-        customer = Customer.create_thread(customer_name)
-        customer.start()
+    def dispatch_func():
+        # Keep sending customer at a random Interval.
+        i = 0
+        while True:
+            i += 1
+            sleep(get_next_time(CUSTOMER_RATE))
+            customer_name = 'Customer ' + str(i)
+            customer = Customer.create_thread(customer_name)
+            customer.start()
+    Thread(target=dispatch_func).start()
+
+def start_message_queue():
+    Thread(target=message_queue.listen_on_queue()).start()
 
 def main():
+    start_message_queue()
+    
     # Create some barbers waiting for customers.
     for name in BARBER_LIST:
         barber = Barber.create_thread(name)
         barber.start()
+
+    dispatch_customer()
     
-    Thread(target=dispatch_customer).start()
-    Thread(target=message_queue.listen_on_queue()).start()
+    # Listening on incoming message.
     while True:
         message = sys.stdin.readline()
         print(message, flush=True)
+ 

@@ -32,7 +32,8 @@ server.listen({
 
   barbershop.stdout.on('data', (chunk) => {
     const data: Array<string> = chunk.toString().split('\n');
-    // The incoming string usaully split by '\n'. 
+    // The incoming string usaully split by '\n'.
+    console.log(data);
     const splitData = data.filter(ele => ele !== '');
     splitData.forEach(message => {
       ioServer.sockets.emit('message', message);

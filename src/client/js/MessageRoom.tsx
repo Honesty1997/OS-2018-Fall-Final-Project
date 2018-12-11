@@ -61,7 +61,7 @@ export default class MessageRoom extends Component {
 				<div style={outerBoxStyle}>
 					<section style={innerStyle}>
 						<ul>
-							{messages}
+							{ messages }
 						</ul>
 					</section>
 					<section style={innerStyle}>

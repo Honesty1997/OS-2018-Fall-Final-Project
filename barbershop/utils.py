@@ -1,3 +1,4 @@
+import json
 from random import expovariate
 def get_next_time(rate):
     '''Produce time range until next customer's arrival.
@@ -11,3 +12,11 @@ def get_next_time(rate):
             The time interval(seconds).
     '''
     return expovariate(rate)
+
+def emit(emitter, event_type, name, **kwargs):
+    data = {
+        'emitter': emitter,
+        'type': event_type,
+        'name': name,
+    }
+    return json.dumps(data)

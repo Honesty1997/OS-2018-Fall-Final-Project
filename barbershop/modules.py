@@ -1,8 +1,11 @@
 from threading import Thread
+from .utils import emit
 
 class ThreadCreator:
     '''The class represents a higher level thread constructor.
     '''
+    target = None
+    name = None
     def __init__(self, barber_semaphore, customer_semaphore, seat_semaphore, customer_queue, message_queue):
         self.customer_semaphore = customer_semaphore
         self.barber_semaphore = barber_semaphore
@@ -17,8 +20,8 @@ class ThreadCreator:
             pass
         return func
 
-    def send(self, message):
-        self.message_queue.put(message)
+    def trigger(self, event_type, **kwargs):
+        self.message_queue.put(emit(self.target, event_type, **kwargs))
 
     def create_thread(self, name):
         '''Return a thread for further execution.

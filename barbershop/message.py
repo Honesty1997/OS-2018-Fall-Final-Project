@@ -11,5 +11,5 @@ class MessageQueue:
         def listen_func():
             while True:
                 message = self.queue.get(block=True)
-                print(message, flush=True)
+                print(message , flush=True)
         return listen_func
