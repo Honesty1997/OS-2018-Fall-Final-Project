@@ -4,8 +4,9 @@ from random import choice
 import sys
 from queue import Queue
 
+from .utils import get_next_time
 from .message import MessageQueue
-from .conf import barber_list
+from .conf import BARBER_LIST, CUSTOMER_RATE
 from .Barber import Barber as B
 from .Customer import Customer as C
 
@@ -29,16 +30,15 @@ def dispatch_customer():
     # Keep sending customer at a random Interval.
     i = 0
     while True:
-        # FIXME The time is set to 2 seconds for now. Should change to some random interval.
-        i = (i + 1) % 100
-        sleep(1)
+        i += 1
+        sleep(get_next_time(CUSTOMER_RATE))
         customer_name = 'Customer ' + str(i)
         customer = Customer.create_thread(customer_name)
         customer.start()
 
 def main():
     # Create some barbers waiting for customers.
-    for name in barber_list:
+    for name in BARBER_LIST:
         barber = Barber.create_thread(name)
         barber.start()
     
