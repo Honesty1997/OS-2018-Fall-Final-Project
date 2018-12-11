@@ -22,9 +22,17 @@ server.listen({
   host,
 }, () => {
   console.log(`Starting development server at ${host}:${port}`);
-  barbershop = spawn('python3', ['main.py']);
+  try {
+    // Make sure your python version is 3.X. If python3 is not found in your path, 
+    // just use python.
+    barbershop = spawn('python3', ['main.py']);
+  } catch {
+    barbershop = spawn('python', ['main.py']);
+  }
+
   barbershop.stdout.on('data', (chunk) => {
     const data: Array<string> = chunk.toString().split('\n');
+    // The incoming string usaully split by '\n'. 
     const splitData = data.filter(ele => ele !== '');
     splitData.forEach(message => {
       ioServer.sockets.emit('message', message);
