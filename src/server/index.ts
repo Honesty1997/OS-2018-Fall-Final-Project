@@ -4,7 +4,7 @@ import http from 'http';
 import app from './app';
 import Server from 'socket.io';
 import config from 'config';
-import listenClient from './controllers';
+import { listenOnClient, initializeState } from './controllers';
 
 const port: number = config.get('server.port');
 const host: string = config.get('server.host');
@@ -16,6 +16,7 @@ const ioOptions = {
 const ioServer: SocketIO.Server = Server(server, ioOptions);
 
 let barbershop: ChildProcess;
+const manager = initializeState();
 
 server.listen({
   port,
@@ -33,14 +34,19 @@ server.listen({
   barbershop.stdout.on('data', (chunk) => {
     const data: Array<string> = chunk.toString().split('\n');
     // The incoming string usaully split by '\n'.
-    console.log(data);
     const splitData = data.filter(ele => ele !== '');
     splitData.forEach(message => {
-      ioServer.sockets.emit('message', message);
+      let deserializeData = JSON.parse(message);
+      manager.dispatch(deserializeData);
+      console.log(manager.getState());
+      ioServer.sockets.emit('message', manager.getState());
     });
   });
 
-  ioServer.on('connection', listenClient(barbershop));
+  ioServer.on('connection', (socket) => {
+    listenOnClient(barbershop)(socket);
+    ioServer.sockets.emit('initialize', manager.getState());
+  });
 
   barbershop.on('close', (code) => {
     console.log(`Barbershop process exited with code ${code}`);

@@ -13,10 +13,11 @@ def get_next_time(rate):
     '''
     return expovariate(rate)
 
-def emit(emitter, event_type, name, **kwargs):
+def emit(emitter, state, name, **kwargs):
     data = {
         'emitter': emitter,
-        'type': event_type,
+        'state': state,
         'name': name,
+        **kwargs,
     }
     return json.dumps(data)

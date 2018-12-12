@@ -9,10 +9,18 @@ const baseConfig = {
   module: {
     rules: [
       {
-        test: /.tsx?/,
+        test: /\.tsx?/,
         loader: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      }
     ],
   },
   stats: {
@@ -43,7 +51,7 @@ const clientConfig = {
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.json', 'scss'],
   },
 };
 

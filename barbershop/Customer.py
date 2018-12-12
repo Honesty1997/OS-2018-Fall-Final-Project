@@ -15,8 +15,7 @@ class Customer(ThreadCreator):
                 # Signal barber that a customer has been added into waiting queue.
                 self.customer_queue.put(name)
                 self.customer_semaphore.release()
+                self.trigger('waiting', name=name)
                 self.barber_semaphore.acquire()
-                '''
-                TODO: Wait for cuting hair.
-                '''
+                self.trigger('serving', name=name)
         return customer_func

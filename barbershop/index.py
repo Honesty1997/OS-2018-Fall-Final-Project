@@ -6,12 +6,9 @@ from queue import Queue
 
 from .utils import get_next_time
 from .message import MessageQueue
-from .conf import BARBER_LIST, CUSTOMER_RATE
+from .conf import BARBER_LIST, CUSTOMER_RATE, BABER_COUNT, SEAT_COUNT
 from .Barber import Barber as B
 from .Customer import Customer as C
-
-BABER_COUNT = 5
-SEAT_COUNT = 5
 
 barber_semaphore = BoundedSemaphore(BABER_COUNT)
 customer_semaphore = Semaphore(0)
@@ -45,7 +42,7 @@ def main():
     start_message_queue()
     
     # Create some barbers waiting for customers.
-    for name in BARBER_LIST:
+    for name in BARBER_LIST[:BABER_COUNT]:
         barber = Barber.create_thread(name)
         barber.start()
 

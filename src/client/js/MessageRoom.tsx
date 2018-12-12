@@ -13,14 +13,6 @@ interface MessageRoomState {
 	socket: SocketIOClient.Socket;
 };
 
-const outerBoxStyle = {
-	display: 'flex',
-};
-
-const innerStyle = {
-	flex: 1,
-};
-
 export default class MessageRoom extends Component {
 	public state: MessageRoomState;
 	constructor(props: any) {
@@ -45,6 +37,7 @@ export default class MessageRoom extends Component {
 
 	public componentDidMount() {
 		socket.on('message', (data: string) => {
+			data = JSON.parse(data);
 			this.setMessage(data);
 		});
 

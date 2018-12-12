@@ -10,16 +10,14 @@ class Barber(ThreadCreator):
     target = 'barber'
     def initialize(self, name):
         def barber_func():
+            self.trigger('start', name=name)
             while True:
                 self.trigger('wait', name=name)
                 self.customer_semaphore.acquire()
                 self.seat_semaphore.release()
                 customer_name = self.customer_queue.get()
-                self.trigger('serve', name=name)
-                '''
-                    TODO: Do something with customer
-                '''
+                self.trigger('serving', name=name, customer_name=customer_name)
                 sleep(get_next_time(BARBER_SERVE_TIME))
-                self.trigger('served', name=name, customer_name=customer_name)
                 self.barber_semaphore.release()
+                self.trigger('served', name=name, customer_name=customer_name)
         return barber_func
