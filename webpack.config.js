@@ -17,8 +17,8 @@ const baseConfig = {
         test: /\.scss$/,
         use: [
           'style-loader',
-          'css-loader',
-          'sass-loader'
+          'sass-loader',
+          'css-loader'
         ]
       }
     ],
@@ -51,7 +51,7 @@ const clientConfig = {
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json', 'scss'],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.scss'],
   },
 };
 

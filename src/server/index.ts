@@ -38,7 +38,6 @@ server.listen({
     splitData.forEach(message => {
       let deserializeData = JSON.parse(message);
       manager.dispatch(deserializeData);
-      console.log(manager.getState());
       ioServer.sockets.emit('message', manager.getState());
     });
   });

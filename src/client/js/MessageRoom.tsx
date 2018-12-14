@@ -3,13 +3,14 @@ import React from 'react';
 import {
 	Component
 } from 'react';
+import { Store } from '../../server/controllers';
 
 const socket: SocketIOClient.Socket = io({
 	path: '/channel',
 });
 
 interface MessageRoomState {
-	messages: Array <string> ;
+	store : Store;
 	socket: SocketIOClient.Socket;
 };
 
@@ -18,27 +19,17 @@ export default class MessageRoom extends Component {
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			messages: [],
+			store: {
+				customers: [],
+				barbers: [],
+			},
 			socket,
 		}
 	}
 
-	public setMessage(message: string) {
-		if (this.state.messages.length == 40) {
-			this.setState({
-				messages: [message]
-			});
-		} else {
-			this.setState({
-				messages: [...this.state.messages, message]
-			});
-		}
-	}
-
 	public componentDidMount() {
-		socket.on('message', (data: string) => {
-			data = JSON.parse(data);
-			this.setMessage(data);
+		socket.on('message', (store: Store) => {
+			this.setState({ store });
 		});
 
 		this.setState({ socket: socket });
@@ -49,18 +40,34 @@ export default class MessageRoom extends Component {
 	}
 
 	render() {
-		const messages = this.state.messages.map(message => <li>{ message }</li>);
+		const customers = this.state.store.customers.map(customer => (
+			<tr key={ customer.name }>
+				<th>{ customer.name }</th>
+				<th>{ customer.state } </th>
+			</tr>
+		));
+		const barbers = this.state.store.barbers.map(barber => (
+			<tr key={ barber.name }>
+				<th> { barber.name } </th>
+				<th> {barber.state } </th>
+				<th> {barber.client || 'None'} </th>
+			</tr>
+		));
 			return (
-				<div style={outerBoxStyle}>
-					<section style={innerStyle}>
-						<ul>
-							{ messages }
-						</ul>
+				<div>
+					<section>
+						<table>
+							<tbody>
+							{ barbers }
+							</tbody>
+						</table>
 					</section>
-					<section style={innerStyle}>
-						<button onClick={this.onClick.bind(this)}>
-							Send a message
-					</button>
+					<section>
+						<table>
+							<tbody>
+							{ customers }
+							</tbody>
+						</table>
 					</section>
 				</div>
 			);

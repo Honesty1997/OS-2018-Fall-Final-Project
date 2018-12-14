@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-import css from '../scss/main.scss';
+import '../scss/main.scss';
 
 import MessageRoom from './MessageRoom';
 
