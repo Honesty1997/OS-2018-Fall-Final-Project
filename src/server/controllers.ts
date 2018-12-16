@@ -1,6 +1,4 @@
-import {
-  ChildProcess
-} from "child_process";
+import { ChildProcess } from "child_process";
 
 export function listenOnClient(barbershop: ChildProcess): Function {
   return function (socket: SocketIO.Socket): void {
@@ -16,8 +14,8 @@ interface StateManager {
 }
 
 export interface Store {
-  barbers: Array<Barber>;
-  customers: Array<Customer>;
+  barbers: Barber[];
+  customers: Customer[];
 }
 
 export interface Person {
@@ -82,8 +80,8 @@ function initializeBarber(name: string, state: string, client=null): Barber {
   };
 }
 
-function barberReducer(currentState: Store['barbers'], event: BarberEvent): Array<Barber> {
-  let newState: Array<Barber>;
+function barberReducer(currentState: Store['barbers'], event: BarberEvent): Barber[] {
+  let newState: Barber[];
   switch(event.state) {
     case 'start':
       newState = currentState.slice();
@@ -100,8 +98,8 @@ function barberReducer(currentState: Store['barbers'], event: BarberEvent): Arra
   return newState;
 };
 
-function customerReducer(currentState: Store['customers'], event: CustomerEvent): Array<Customer> {
-  let newState: Array<Customer>;
+function customerReducer(currentState: Store['customers'], event: CustomerEvent): Customer[] {
+  let newState: Customer[];
   switch(event.state) {
     case 'enter':
       newState = currentState.slice();
