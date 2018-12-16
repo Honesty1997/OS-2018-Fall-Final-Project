@@ -20,15 +20,16 @@ export interface Store {
   customers: Array<Customer>;
 }
 
-export interface Barber {
+export interface Person {
   name: string;
   state: string;
+}
+
+export interface Barber extends Person {
   client: string | null;
 }
 
-export interface Customer {
-  name: string;
-  state: string;
+export interface Customer extends Person {
 }
 
 interface CustomerEvent {

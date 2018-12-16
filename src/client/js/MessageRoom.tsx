@@ -4,6 +4,8 @@ import {
 	Component
 } from 'react';
 import { Store } from '../../server/controllers';
+import CustomerTable from './CustomerTable';
+import BarberTable from './BarberTable';
 
 const socket: SocketIOClient.Socket = io({
 	path: '/channel',
@@ -35,41 +37,19 @@ export default class MessageRoom extends Component {
 		this.setState({ socket: socket });
 	}
 
-	private onClick(event: Event) {
-		this.state.socket.emit('client', 'Front end message.');
-	}
-
 	render() {
-		const customers = this.state.store.customers.map(customer => (
-			<tr key={ customer.name }>
-				<th>{ customer.name }</th>
-				<th>{ customer.state } </th>
-			</tr>
-		));
-		const barbers = this.state.store.barbers.map(barber => (
-			<tr key={ barber.name }>
-				<th> { barber.name } </th>
-				<th> {barber.state } </th>
-				<th> {barber.client || 'None'} </th>
-			</tr>
-		));
 			return (
-				<div>
-					<section>
-						<table>
-							<tbody>
-							{ barbers }
-							</tbody>
-						</table>
+				<div className='message-table'>
+					<section className='message-cell'>
+						<BarberTable barbers={this.state.store.barbers} />
 					</section>
-					<section>
-						<table>
-							<tbody>
-							{ customers }
-							</tbody>
-						</table>
+					<section className='message-cell'>
+						<CustomerTable customers={this.state.store.customers} state={'waiting'}/>
+					</section>
+					<section className='message-cell'>
+						<CustomerTable customers={this.state.store.customers} state={'full'}/>
 					</section>
 				</div>
 			);
 	}
-}
+};

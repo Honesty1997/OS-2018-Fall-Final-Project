@@ -1,16 +1,9 @@
-.person {
-    width: 100px;
-    height: 100px;
+.message-table {
+    display: flex;
 }
 
-.customer {
-    background-color: darkturquoise;
-}
-
-.barber {
-    background-color: deeppink;
-}
-
-body {
-    background-color: beige;
+.message-cell {
+    flex: 1;
+    padding: 15px;
+    overflow: scroll;
 }

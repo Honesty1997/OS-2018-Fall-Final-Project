@@ -45,6 +45,7 @@
     "config": "^2.0.1",
     "express": "^4.16.4",
     "html": "^1.0.0",
+    "materialize-css": "^1.0.0-rc.2",
     "nodemon": "^1.18.4",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
