@@ -44,7 +44,7 @@ server.listen({
 
   ioServer.on('connection', (socket) => {
     listenOnClient(barbershop)(socket);
-    ioServer.sockets.emit('initialize', manager.getState());
+    ioServer.sockets.emit('message', manager.getState());
   });
 
   barbershop.on('close', (code) => {
