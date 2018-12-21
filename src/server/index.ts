@@ -43,7 +43,8 @@ server.listen({
   });
 
   ioServer.on('connection', (socket) => {
-    listenOnClient(barbershop)(socket);
+    listenOnClient(barbershop, manager)(socket);
+
     ioServer.sockets.emit('message', manager.getState());
   });
 

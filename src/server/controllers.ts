@@ -1,9 +1,14 @@
 import { ChildProcess } from "child_process";
 
-export function listenOnClient(barbershop: ChildProcess): Function {
+export function listenOnClient(barbershop: ChildProcess, manager: StateManager): Function {
   return function (socket: SocketIO.Socket): void {
     socket.on('client', (message) => {
-      barbershop.stdin.write(`${message}\n`, 'utf-8');
+      barbershop.stdin.write(`${JSON.stringify(message)}\n`, 'utf-8');
+    });
+
+    socket.on('change-state', (message) => {
+      manager.dispatch(message);
+      socket.emit(manager.getState());
     });
   }
 }
@@ -31,14 +36,14 @@ export interface Customer extends Person {
 }
 
 interface CustomerEvent {
-  emitter: string;
-  state: string;
+  emitter: string; // customer
+  state: string;  // enter or delete
   name: string;
 }
 
 interface BarberEvent {
-  emitter: string;
-  state: string;
+  emitter: string;  // barber
+  state: string;  // start
   name: string;
   customer_name: string;
 }

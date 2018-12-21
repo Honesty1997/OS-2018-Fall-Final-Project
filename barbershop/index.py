@@ -1,8 +1,9 @@
-from threading import Thread, Semaphore, BoundedSemaphore
+from threading import Thread, Semaphore, BoundedSemaphore, Lock
 from time import sleep
 from random import choice
 import sys
 from queue import Queue
+import json
 
 from .utils import get_next_time
 from .message import MessageQueue
@@ -22,17 +23,22 @@ Barber = B(barber_semaphore, customer_semaphore,
 Customer = C(barber_semaphore, customer_semaphore,
              seat_semaphore, customer_queue, message_queue.get_queue())
 
+customer_count_lock = Lock()
+customer_count = 0
 
 def dispatch_customer():
+    global customer_count
+    with customer_count_lock:
+        customer_count += 1
+    customer_name = 'Customer ' + str(customer_count)
+    customer = Customer.create_thread(customer_name)
+    customer.start()
+
+def start_dispatch_customer():
     def dispatch_func():
-        # Keep sending customer at a random Interval.
-        i = 0
         while True:
-            i += 1
+            dispatch_customer()
             sleep(get_next_time(CUSTOMER_RATE))
-            customer_name = 'Customer ' + str(i)
-            customer = Customer.create_thread(customer_name)
-            customer.start()
     Thread(target=dispatch_func).start()
 
 def start_message_queue():
@@ -46,10 +52,14 @@ def main():
         barber = Barber.create_thread(name)
         barber.start()
 
-    dispatch_customer()
+    start_dispatch_customer()
     
     # Listening on incoming message.
     while True:
         message = sys.stdin.readline()
-        print(message, flush=True)
+        if message:
+            print(message, flush=True)
+            message = json.loads(message)
+            if message['type'] == 'add' and message['target'] == 'customer':
+                dispatch_customer()
  

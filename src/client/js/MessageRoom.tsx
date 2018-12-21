@@ -3,7 +3,7 @@ import React from 'react';
 import {
 	Component
 } from 'react';
-import { Store } from '../../server/controllers';
+import { Store, Customer } from '../../server/controllers';
 import CustomerTable from './CustomerTable';
 import BarberTable from './BarberTable';
 
@@ -27,19 +27,44 @@ export default class MessageRoom extends Component {
 			},
 			socket,
 		}
+		this.addCustomer = this.addCustomer.bind(this);
 	}
 
 	public componentDidMount() {
 		socket.on('message', (store: Store) => {
+			store.customers.forEach(customer => {
+				if (customer.state == 'full') {
+					setTimeout(()=> {
+						this.removeCustomer(customer);
+					},
+					2000);
+				}
+			});
 			this.setState({ store });
 		});
 
 		this.setState({ socket: socket });
 	}
 
+	public removeCustomer(customer: Customer) {
+		this.state.socket.emit('change-state', {
+			name: customer.name,
+			emitter: 'customer',
+			state: 'delete',
+		});
+	}
+
+	public addCustomer() {
+		this.state.socket.emit('client', {
+			type: 'add',
+			target: 'customer'
+		});
+	}
+
 	render() {
 			return (
-				<div className='message-table'>
+				<React.Fragment>
+					<div className='message-table'>
 					<section className='message-cell'>
 						<BarberTable barbers={this.state.store.barbers} />
 					</section>
@@ -50,6 +75,10 @@ export default class MessageRoom extends Component {
 						<CustomerTable customers={this.state.store.customers} state={'full'}/>
 					</section>
 				</div>
+					<section>
+						<button className="btn" onClick={this.addCustomer}>Add a customer</button>
+					</section>
+				</React.Fragment>
 			);
 	}
 };
