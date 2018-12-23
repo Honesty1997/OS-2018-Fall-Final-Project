@@ -5,20 +5,23 @@ import sys
 from queue import Queue
 import json
 
+from .argument_parse import argparser
 from .utils import get_next_time
 from .message import MessageQueue
-from .conf import BARBER_LIST, CUSTOMER_RATE, BABER_COUNT, SEAT_COUNT
+from .conf import BARBER_LIST
 from .Barber import Barber as B
 from .Customer import Customer as C
 
-barber_semaphore = BoundedSemaphore(BABER_COUNT)
-customer_semaphore = Semaphore(0)
-seat_semaphore = BoundedSemaphore(SEAT_COUNT)
+args = argparser.parse_args()
 
-customer_queue = Queue(SEAT_COUNT)
+barber_semaphore = BoundedSemaphore(args.barber_number)
+customer_semaphore = Semaphore(0)
+seat_semaphore = BoundedSemaphore(args.seat)
+
+customer_queue = Queue(args.seat)
 message_queue = MessageQueue()
 
-Barber = B(barber_semaphore, customer_semaphore,
+Barber = B(args.barber_serve_time ,barber_semaphore, customer_semaphore,
            seat_semaphore, customer_queue, message_queue.get_queue())
 Customer = C(barber_semaphore, customer_semaphore,
              seat_semaphore, customer_queue, message_queue.get_queue())
@@ -38,7 +41,7 @@ def start_dispatch_customer():
     def dispatch_func():
         while True:
             dispatch_customer()
-            sleep(get_next_time(CUSTOMER_RATE))
+            sleep(get_next_time(args.customer_rate))
     Thread(target=dispatch_func).start()
 
 def start_message_queue():
@@ -48,7 +51,7 @@ def main():
     start_message_queue()
     
     # Create some barbers waiting for customers.
-    for name in BARBER_LIST[:BABER_COUNT]:
+    for name in BARBER_LIST[:args.barber_number]:
         barber = Barber.create_thread(name)
         barber.start()
 
