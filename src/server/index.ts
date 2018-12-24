@@ -52,6 +52,16 @@ server.listen({
     console.log(`Barbershop process exited with code ${code}`);
     console.log('Barbershop is closed T_T.');
   });
+
+  // kill the python process when main process exits.
+  process.on('SIGINT', () => {
+    console.log(`\rKeyboard Interrupt. Program exit.`);
+    process.exit();
+    barbershop.kill();
+  });
+  process.on('exit', () => {
+    barbershop.kill();
+  });
 });
 server.on('close', () => {
   barbershop.kill('byebye');
