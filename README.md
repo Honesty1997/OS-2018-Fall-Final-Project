@@ -32,7 +32,12 @@ git clone https://github.com/Honesty1997/OS-2018-Fall-Final-Project.git
 mv OS-2018-Fall-Final-Project <your-desired-name>
 ```
 4. cd <your-desired-name>
-5. install all python and node dependencies.
+5. Check you python version. We use python3 to execute our python script, so please make sure your python version is up to date.
+```
+python -V
+# Python 3.6.6
+```
+6. install all python and node dependencies.
 ```
 npm install
 pip install -r requirements.txt
