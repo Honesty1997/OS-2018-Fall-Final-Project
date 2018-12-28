@@ -1,22 +1,21 @@
 import { spawn, ChildProcess } from 'child_process';
 import http from 'http';
+import config from 'config';
 
 import app from './app';
-import Server from 'socket.io';
-import config from 'config';
-import { listenOnClient, initializeState } from './controllers';
+import IOServer  from './socketServer';
+import { clientRegister, initializeState } from './controllers';
+import { barbershopManager as shopManager } from './barbershopProcess';
 
 const port: number = config.get('server.port');
 const host: string = config.get('server.host');
 const server = http.createServer(app);
-const ioOptions = {
-  serveClient: false,
-  path: '/channel',
-};
-const ioServer: SocketIO.Server = Server(server, ioOptions);
+const ioServer = IOServer(server);
 
 let barbershop: ChildProcess;
-const manager = initializeState();
+
+const stateManager = initializeState();
+const barbershopManager = shopManager();
 
 server.listen({
   port,
@@ -30,39 +29,24 @@ server.listen({
   } catch {
     barbershop = spawn('python', ['main.py']);
   }
-
-  barbershop.stdout.on('data', (chunk) => {
-    const data: Array<string> = chunk.toString().split('\n');
-    // The incoming string usaully split by '\n'.
-    const splitData = data.filter(ele => ele !== '');
-    splitData.forEach(message => {
-      let deserializeData = JSON.parse(message);
-      manager.dispatch(deserializeData);
-      ioServer.sockets.emit('message', manager.getState());
-    });
-  });
-
+  const clientAddListener = clientRegister(barbershopManager, ioServer, stateManager);
+  barbershopManager.startBarbershop(ioServer, stateManager);  
+  
   ioServer.on('connection', (socket) => {
-    listenOnClient(barbershop, manager)(socket);
-
-    ioServer.sockets.emit('message', manager.getState());
-  });
-
-  barbershop.on('close', (code) => {
-    console.log(`Barbershop process exited with code ${code}`);
-    console.log('Barbershop is closed T_T.');
+    clientAddListener(socket);
+    socket.emit('message', stateManager.getState());
   });
 
   // kill the python process when main process exits.
   process.on('SIGINT', () => {
     console.log(`\rKeyboard Interrupt. Program exit.`);
     process.exit();
-    barbershop.kill();
+    barbershop.kill('SIGTERM');
   });
   process.on('exit', () => {
-    barbershop.kill();
+    barbershop.kill('SIGTERM');
   });
 });
 server.on('close', () => {
-  barbershop.kill('byebye');
+  barbershop.kill('SIGTERM');
 });

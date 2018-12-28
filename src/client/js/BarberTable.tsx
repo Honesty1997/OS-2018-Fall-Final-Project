@@ -5,10 +5,11 @@ import { Barber } from '../../server/controllers';
 
 interface BarberTableProps {
   barbers: Barber[];
+  title: string;
 }
-const BarberTable = ({ barbers }: BarberTableProps) => {
+const BarberTable = ({ barbers, title }: BarberTableProps) => {
   const fields = [ 'name', 'state', 'client'];
-  return <Table fields={fields} data={barbers} />;
+  return <Table title={title} fields={fields} data={barbers} />;
 };
 
 export default BarberTable;

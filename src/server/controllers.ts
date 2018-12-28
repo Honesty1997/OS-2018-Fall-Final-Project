@@ -1,19 +1,30 @@
-import { ChildProcess } from "child_process";
+import { BarbershopManager } from './barbershopProcess';
 
-export function listenOnClient(barbershop: ChildProcess, manager: StateManager): Function {
+export function clientRegister(barbershopManager: BarbershopManager, socketServer: SocketIO.Server, manager: StateManager): Function {
   return function (socket: SocketIO.Socket): void {
     socket.on('client', (message) => {
-      barbershop.stdin.write(`${JSON.stringify(message)}\n`, 'utf-8');
+      barbershopManager.writeToBarbershop(message);
     });
 
     socket.on('change-state', (message) => {
       manager.dispatch(message);
       socket.emit(manager.getState());
     });
+
+    socket.on('clear', () => {
+      barbershopManager.killBarbershop();
+      manager.dispatch({ emitter: 'process', state: 'restart', name: 'none' });
+      socketServer.sockets.emit('message', manager.getState());
+    });
+
+    socket.on('restart', () => {
+      socketServer.sockets.emit('message', manager.getState());
+      barbershopManager.startBarbershop(socketServer, manager);
+    });
   }
 }
 
-interface StateManager {
+export interface StateManager {
   dispatch: Function;
   getState: Function;
 }
@@ -26,6 +37,7 @@ export interface Store {
 export interface Person {
   name: string;
   state: string;
+  [key: string]: string | null;
 }
 
 export interface Barber extends Person {
@@ -35,17 +47,16 @@ export interface Barber extends Person {
 export interface Customer extends Person {
 }
 
-interface CustomerEvent {
-  emitter: string; // customer
-  state: string;  // enter or delete
+interface BaseEvent {
+  emitter: string;
+  state: string;
   name: string;
 }
+interface CustomerEvent extends BaseEvent {
+}
 
-interface BarberEvent {
-  emitter: string;  // barber
-  state: string;  // start
-  name: string;
-  customer_name: string;
+interface BarberEvent extends BaseEvent {
+  customer_name?: string;
 }
 
 export function initializeState(): StateManager {
@@ -55,6 +66,11 @@ export function initializeState(): StateManager {
   };
 
   function dispatch(event: BarberEvent | CustomerEvent) {
+    if (event.state === 'restart') {
+      state.barbers = [];
+      state.customers = [];
+    }
+  
     if (event.state === 'served') {
       state.customers = customerReducer(state.customers, {emitter: 'customer', state: 'served', name: event.customer_name });
     }
