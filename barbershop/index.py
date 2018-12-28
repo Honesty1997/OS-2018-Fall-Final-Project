@@ -2,7 +2,6 @@ from threading import Thread, Semaphore, BoundedSemaphore, Lock
 from time import sleep
 from random import choice
 import sys
-import os
 from queue import Queue
 import json
 import signal
@@ -67,5 +66,3 @@ def main():
             message = json.loads(message)
             if message['type'] == 'add' and message['target'] == 'customer':
                 dispatch_customer()
-            if message['type'] == 'leave':
-                os.exit(0)
