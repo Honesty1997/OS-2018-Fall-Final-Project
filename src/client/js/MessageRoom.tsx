@@ -31,7 +31,7 @@ export default class MessageRoom extends Component<{}, MessageRoomState> {
 		this.addCustomer = this.addCustomer.bind(this);
 	}
 
-	public componentDidMount() {
+	public componentDidMount(): void {
 		socket.on('message', (store: Store) => {
 			store.customers.forEach(customer => {
 				if (customer.state == 'full') {

@@ -17,7 +17,9 @@ export function clientRegister(barbershopManager: BarbershopManager, socketServe
       socketServer.sockets.emit('message', manager.getState());
     });
 
-    socket.on('restart', () => {
+    socket.on('restart', (message) => {
+      barbershopManager.config('seatNum', message['seatNum']);
+      barbershopManager.config('barberNum', message['barberNum']);
       socketServer.sockets.emit('message', manager.getState());
       barbershopManager.startBarbershop(socketServer, manager);
     });
