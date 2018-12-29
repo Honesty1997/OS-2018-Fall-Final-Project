@@ -22,6 +22,12 @@ export function barbershopManager(): BarbershopManager {
   };
 
   function config(key: 'barberNum' | 'seatNum', num: number): void {
+    if (key === 'barberNum' && (num > 10 || num < 1)) {
+      throw Error('barberNum can not be more than 10 or less than 1.');
+    }
+    if (key === 'seatNum' && num < 1) {
+      throw Error('seatNum can not be less than 1');
+    }
     state[key] = num;
   }
 
@@ -38,9 +44,7 @@ export function barbershopManager(): BarbershopManager {
   }
   function killBarbershop(): void {
     if (state.barbershop) {
-      const message = { type: 'leave' };
       state.barbershop.kill('SIGTERM');
-      state.barbershop.stdin.write(`${JSON.stringify(message)}`, 'utf-8');
       return;
     }
     throw new Error('Barbershop process is not running.');

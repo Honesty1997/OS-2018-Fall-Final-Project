@@ -1,4 +1,3 @@
-import { spawn, ChildProcess } from 'child_process';
 import http from 'http';
 import config from 'config';
 
@@ -7,12 +6,11 @@ import IOServer  from './socketServer';
 import { clientRegister, initializeState } from './controllers';
 import { barbershopManager as shopManager } from './barbershopProcess';
 
-const port: number = config.get('server.port');
-const host: string = config.get('server.host');
+const port: number = process.env.NODE_PORT ? parseInt(process.env.NODE_PORT) : config.get('server.port');
+const host: string = process.env.NODE_HOST ? process.env.NODE_HOST : config.get('server.port');
+
 const server = http.createServer(app);
 const ioServer = IOServer(server);
-
-let barbershop: ChildProcess;
 
 const stateManager = initializeState();
 const barbershopManager = shopManager();
@@ -22,13 +20,8 @@ server.listen({
   host,
 }, () => {
   console.log(`Starting development server at ${host}:${port}`);
-  try {
-    // Make sure your python version is 3.X. If python3 is not found in your path, 
-    // just use python.
-    barbershop = spawn('python3', ['main.py']);
-  } catch {
-    barbershop = spawn('python', ['main.py']);
-  }
+  // Make sure your python version is 3.X. If python3 is not found in your path, 
+  // just use python.
   const clientAddListener = clientRegister(barbershopManager, ioServer, stateManager);
   barbershopManager.startBarbershop(ioServer, stateManager);  
   
@@ -41,12 +34,12 @@ server.listen({
   process.on('SIGINT', () => {
     console.log(`\rKeyboard Interrupt. Program exit.`);
     process.exit();
-    barbershop.kill('SIGTERM');
+    barbershopManager.killBarbershop();
   });
   process.on('exit', () => {
-    barbershop.kill('SIGTERM');
+    barbershopManager.killBarbershop();
   });
 });
 server.on('close', () => {
-  barbershop.kill('SIGTERM');
+  barbershopManager.killBarbershop();
 });
