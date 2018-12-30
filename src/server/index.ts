@@ -7,7 +7,7 @@ import { clientRegister, initializeState } from './controllers';
 import { barbershopManager as shopManager } from './barbershopProcess';
 
 const port: number = process.env.NODE_PORT ? parseInt(process.env.NODE_PORT) : config.get('server.port');
-const host: string = process.env.NODE_HOST ? process.env.NODE_HOST : config.get('server.port');
+const host: string = process.env.NODE_HOST ? process.env.NODE_HOST : config.get('server.host');
 
 const server = http.createServer(app);
 const ioServer = IOServer(server);

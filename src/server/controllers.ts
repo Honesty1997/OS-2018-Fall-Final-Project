@@ -8,7 +8,7 @@ export function clientRegister(barbershopManager: BarbershopManager, socketServe
 
     socket.on('change-state', (message) => {
       manager.dispatch(message);
-      socket.emit(manager.getState());
+      socket.emit('message', manager.getState());
     });
 
     socket.on('clear', () => {
@@ -27,8 +27,8 @@ export function clientRegister(barbershopManager: BarbershopManager, socketServe
 }
 
 export interface StateManager {
-  dispatch: Function;
-  getState: Function;
+  dispatch: (event: BarberEvent | CustomerEvent) => void;
+  getState: () => Store;
 }
 
 export interface Store {
@@ -67,7 +67,7 @@ export function initializeState(): StateManager {
     customers: [],
   };
 
-  function dispatch(event: BarberEvent | CustomerEvent) {
+  function dispatch(event: BarberEvent | CustomerEvent): void {
     if (event.state === 'restart') {
       state.barbers = [];
       state.customers = [];
