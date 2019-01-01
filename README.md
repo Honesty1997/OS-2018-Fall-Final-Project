@@ -1,6 +1,9 @@
 Operating System Final Project
 =======
-
+# Introduction
+The project is aimed to solve a typical process synchronization called "Sleeping Barber problem". While the problem can be solved by using some basic synchronization primitives , we add more complexity on it. We build a web application to visualize the result, and make it possible for user to interact with the application through webpages.
+They can configure threads and dispatch a customer manually.
+Through building the web application, we not only used synchronization also learned RPC and IPC stuffs, which is definitly helpful. The communication between main process and python process is through writing and reading via standard stream. We also use Websocket for realtime update barbershop result on webpage. The part is almost done by an Javascript package called `socket.io`, which has a clear interface and good documentation.
 # Installation Guide
 ## Prerequisite
 Please make sure you have below programs installed.
