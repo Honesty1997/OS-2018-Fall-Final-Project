@@ -62,7 +62,6 @@ def main():
     while True:
         message = sys.stdin.readline()
         if message:
-            print(message, flush=True)
             message = json.loads(message)
             if message['type'] == 'add' and message['target'] == 'customer':
                 dispatch_customer()
