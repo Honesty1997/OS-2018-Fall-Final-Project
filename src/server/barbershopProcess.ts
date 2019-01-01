@@ -1,5 +1,5 @@
 import { ChildProcess, spawn } from "child_process";
-import { StateManager } from './controllers';
+import { StateManager } from './barbershopManager';
 
 interface BarbershopManagerState {
   barbershop: ChildProcess | null;

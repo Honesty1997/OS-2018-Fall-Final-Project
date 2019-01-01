@@ -3,7 +3,8 @@ import config from 'config';
 
 import app from './app';
 import IOServer  from './socketServer';
-import { clientRegister, initializeState } from './controllers';
+import { clientRegister } from './register';
+import { initializeState } from './barbershopManager';
 import { barbershopManager as shopManager } from './barbershopProcess';
 
 const port: number = process.env.NODE_PORT ? parseInt(process.env.NODE_PORT) : config.get('server.port');
@@ -20,8 +21,6 @@ server.listen({
   host,
 }, () => {
   console.log(`Starting development server at ${host}:${port}`);
-  // Make sure your python version is 3.X. If python3 is not found in your path, 
-  // just use python.
   const clientAddListener = clientRegister(barbershopManager, ioServer, stateManager);
   barbershopManager.startBarbershop(ioServer, stateManager);  
   
