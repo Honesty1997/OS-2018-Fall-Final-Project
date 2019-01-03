@@ -4,7 +4,7 @@ import {
 	Component
 } from 'react';
 
-import { Store, Customer } from '../../server/controllers';
+import { Store, Customer } from '../../server/barbershopManager';
 import CustomerTable from './CustomerTable';
 import BarberTable from './BarberTable';
 import ManagePanel from './ManagePanel';

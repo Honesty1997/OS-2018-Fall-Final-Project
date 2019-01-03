@@ -1,7 +1,7 @@
 import React from 'react';
 import Table from './Table';
 
-import { Barber } from '../../server/controllers';
+import { Barber } from '../../server/barbershopManager';
 
 interface BarberTableProps {
   barbers: Barber[];

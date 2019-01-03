@@ -1,34 +1,6 @@
-import { BarbershopManager } from './barbershopProcess';
-
-export function clientRegister(barbershopManager: BarbershopManager, socketServer: SocketIO.Server, manager: StateManager): Function {
-  return function (socket: SocketIO.Socket): void {
-    socket.on('client', (message) => {
-      barbershopManager.writeToBarbershop(message);
-    });
-
-    socket.on('change-state', (message) => {
-      manager.dispatch(message);
-      socket.emit(manager.getState());
-    });
-
-    socket.on('clear', () => {
-      barbershopManager.killBarbershop();
-      manager.dispatch({ emitter: 'process', state: 'restart', name: 'none' });
-      socketServer.sockets.emit('message', manager.getState());
-    });
-
-    socket.on('restart', (message) => {
-      barbershopManager.config('seatNum', message['seatNum']);
-      barbershopManager.config('barberNum', message['barberNum']);
-      socketServer.sockets.emit('message', manager.getState());
-      barbershopManager.startBarbershop(socketServer, manager);
-    });
-  }
-}
-
 export interface StateManager {
-  dispatch: Function;
-  getState: Function;
+  dispatch: (event: BarberEvent | CustomerEvent) => void;
+  getState: () => Store;
 }
 
 export interface Store {
@@ -67,7 +39,7 @@ export function initializeState(): StateManager {
     customers: [],
   };
 
-  function dispatch(event: BarberEvent | CustomerEvent) {
+  function dispatch(event: BarberEvent | CustomerEvent): void {
     if (event.state === 'restart') {
       state.barbers = [];
       state.customers = [];

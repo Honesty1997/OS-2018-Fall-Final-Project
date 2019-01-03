@@ -16,7 +16,7 @@ export default class ManagePanel extends React.PureComponent<ManagePanelProps, M
     super(props);
     this.state = {
       running: true,
-      barberNum: 5,
+      barberNum: 4,
       seatNum: 5,
     }
     this.stopPythonProcess = this.stopPythonProcess.bind(this);

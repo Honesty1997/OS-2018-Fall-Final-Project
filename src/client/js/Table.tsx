@@ -1,5 +1,5 @@
 import React from 'react';
-import { Person } from '../../server/controllers';
+import { Person } from '../../server/barbershopManager';
 
 interface TableProps {
   fields: Array<string>;

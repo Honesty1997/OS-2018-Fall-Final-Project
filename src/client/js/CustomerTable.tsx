@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Table from './Table';
-import { Customer } from '../../server/controllers';
+import { Customer } from '../../server/barbershopManager';
 
 interface CustomerTableProps {
   customers: Customer[];

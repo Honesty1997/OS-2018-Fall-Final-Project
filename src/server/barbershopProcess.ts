@@ -1,5 +1,5 @@
 import { ChildProcess, spawn } from "child_process";
-import { StateManager } from './controllers';
+import { StateManager } from './barbershopManager';
 
 interface BarbershopManagerState {
   barbershop: ChildProcess | null;
@@ -76,7 +76,7 @@ export function attachChildProcessListener(barbershop: ChildProcess, ioServer: S
     // The incoming string usaully split by '\n'.
     const splitData = data.filter(ele => ele !== '');
     splitData.forEach(message => {
-      let deserializeData = JSON.parse(message);
+      const deserializeData = JSON.parse(message);
       manager.dispatch(deserializeData);
       ioServer.sockets.emit('message', manager.getState());
     });
